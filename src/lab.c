@@ -53,8 +53,8 @@ bool do_builtin(struct shell *sh, char **argv) {
 }
 
 void sh_init(struct shell *sh) {
-    sh = malloc(sizeof(struct shell));
-    sh->prompt = "shell>";
+    sh = (shell *) malloc(sizeof(struct shell));
+    sh->prompt = get_prompt("MY_PROMPT");
 }
 
 void sh_destroy(struct shell *sh) {
