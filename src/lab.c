@@ -53,11 +53,13 @@ bool do_builtin(struct shell *sh, char **argv) {
 }
 
 void sh_init(struct shell *sh) {
-    return;
+    sh = (shell *) malloc(sizeof(struct shell));
+    sh->prompt = get_prompt("MY_PROMPT");
 }
 
 void sh_destroy(struct shell *sh) {
-    return;
+    free(sh->prompt);
+    free(sh);
 }
 
 void parse_args(int argc, char **argv) {
