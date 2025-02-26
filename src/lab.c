@@ -4,7 +4,11 @@
 #include "lab.h"
 
 char *get_prompt(const char *env) {
-    return '\0';
+    char *prompt = getenv(env);
+    if (!prompt) {
+        return strdup("shell>");
+    }
+    return strdup(prompt);
 }
 
 int change_dir(char **dir) {
