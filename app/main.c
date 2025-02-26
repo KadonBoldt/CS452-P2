@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
     struct shell sh;
     sh_init(&sh);
     char *line = (char *)NULL;
-    while ((line = readline("shell>")))
+    while ((line = readline(sh.prompt)))
     {
         // do nothing on blank lines don't save history or attempt to exec
         line = trim_white(line);
