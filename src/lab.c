@@ -8,7 +8,7 @@ char *get_prompt(const char *env) {
 }
 
 int change_dir(char **dir) {
-    return 0
+    return 0;
 }
 
 char **cmd_parse(char const *line) {
