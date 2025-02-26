@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include "lab.h"
 
@@ -53,7 +54,7 @@ bool do_builtin(struct shell *sh, char **argv) {
 }
 
 void sh_init(struct shell *sh) {
-    sh = (shell *) malloc(sizeof(struct shell));
+    sh = malloc(sizeof(struct shell));
     sh->prompt = get_prompt("MY_PROMPT");
 }
 
