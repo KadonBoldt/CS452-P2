@@ -22,7 +22,6 @@ char **cmd_parse(const char *line) {
         args[i++] = token;
         token = strtok(NULL, " ");
     }
-    free(line_cpy);
     args[i] = NULL;
     return args;
 }
