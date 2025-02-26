@@ -36,7 +36,8 @@ void sh_destroy(struct shell *sh) {
 }
 
 void parse_args(int argc, char **argv) {
-    while ((int opt = getopt(argc, argv, "v")) != -1) {
+  int opt;
+  while ((opt = getopt(argc, argv, "v")) != -1) {
         switch (opt) {
             case 'v':
                 printf("Shell Version: %d.%d\n", lab_VERSION_MAJOR, lab_VERSION_MINOR);
