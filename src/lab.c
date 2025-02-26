@@ -19,9 +19,10 @@ char **cmd_parse(const char *line) {
     char *line_cpy = strdup(line);
     char *token = strtok(line_cpy, " ");
     while (token && i < max_args - 1) {
-        args[i++] = token;
+        args[i++] = strdup(token);
         token = strtok(NULL, " ");
     }
+    free(line_cpy);
     args[i] = NULL;
     return args;
 }
