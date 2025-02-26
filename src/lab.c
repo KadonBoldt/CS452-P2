@@ -11,16 +11,37 @@ int change_dir(char **dir) {
     return 0;
 }
 
-char **cmd_parse(char const *line) {
-    return '\0';
+char **cmd_parse(const char *line) {
+    size_t max_args = sysconf(_SC_ARG_MAX);
+    char **args = malloc(max_args * sizeof(char *));
+    if (!args) return NULL;
+    size_t i = 0;
+    char *line_cpy = strdup(line);
+    char *token = strtok(line_cpy, " ");
+    while (token && i < max_args - 1) {
+        args[i++] = token;
+        token = strtok(NULL, " ");
+    }
+    free(line_cpy);
+    args[i] = NULL;
+    return args;
 }
 
-void cmd_free(char ** line) {
-    return;
+void cmd_free(char **cmd) {
+    if (!cmd) return;
+    for (size_t i = 0; cmd[i] != NULL; i++) {
+        free(cmd[i]);
+    }
+    free(cmd);
 }
 
 char *trim_white(char *line) {
-    return '\0';
+    while (isspace((unsigned char)*line)) line++;
+    if (!*line) return line;
+    char *end = line + strlen(line) - 1;
+    while (end > line && isspace((unsigned char)*end)) end--;
+    end[1] = '\0';
+    return line;
 }
 
 bool do_builtin(struct shell *sh, char **argv) {
@@ -40,11 +61,8 @@ void parse_args(int argc, char **argv) {
   while ((opt = getopt(argc, argv, "v")) != -1) {
         switch (opt) {
             case 'v':
-                printf("Shell Version: %d.%d\n", lab_VERSION_MAJOR, lab_VERSION_MINOR);
-            exit(EXIT_SUCCESS);
-            default:
-                fprintf(stderr, "Usage: %s [-v]\n", argv[0]);
-            exit(EXIT_FAILURE);
+                printf("Simple Shell Version %d.%d\n", lab_VERSION_MAJOR, lab_VERSION_MINOR);
+                exit(EXIT_SUCCESS);
         }
     }
 }
