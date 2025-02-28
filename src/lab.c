@@ -9,12 +9,15 @@
 #include <unistd.h>
 #include "lab.h"
 
+/* Overall addition of more in-line comments as suggested by both Tyler Tran and Joe Franco */
+
 char *get_prompt(const char *env) {
 	char *prompt = getenv(env);
 	// Return env variable if set, or default if not.
 	return prompt ? strdup(prompt) : strdup("shell>");
 }
 
+/* change_dir is now functional as suggested by Tyler Tran */
 int change_dir(char **args) {
     if (!args[1]) {
         const char *home = getenv("HOME");
