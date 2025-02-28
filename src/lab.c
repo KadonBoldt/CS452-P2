@@ -43,6 +43,7 @@ char **cmd_parse(const char *line) {
         token = strtok(NULL, " ");
     }
     free(line_copy);
+    free(line);
     args[i] = NULL;
     return args;
 }
