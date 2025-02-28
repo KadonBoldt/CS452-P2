@@ -96,6 +96,7 @@ int main(int argc, char *argv[])
             // get control of the shell
             tcsetpgrp(sh.shell_terminal, sh.shell_pgid);
         }
+        cmd_free(cmd);
         free(line);
     }
     sh_destroy(&sh);
