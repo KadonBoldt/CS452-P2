@@ -7,23 +7,19 @@
 
 char *get_prompt(const char *env) {
     char *prompt = getenv(env);
-    if (!prompt) {
-        return strdup("shell>");
-    }
-    return strdup(prompt);
+    return prompt ? prompt : strdup("shell>");
 }
 
 int change_dir(char **args) {
-//    if (!args[1]) {
-//        const char *home = getenv("HOME");
-//        if (!home) {
-//            struct passwd *pw = getpwuid(getuid());
-//            home = pw ? pw->pw_dir : "";
-//        }
-//        return chdir(home);
-//    }
-//    return chdir(args[1]);
-	return 0;
+    if (!args[1]) {
+        const char *home = getenv("HOME");
+        if (!home) {
+            struct passwd *pw = getpwuid(getuid());
+            home = pw ? pw->pw_dir : "";
+        }
+        return chdir(home);
+    }
+    return chdir(args[1]);
 }
 
 char **cmd_parse(const char *line) {
@@ -65,49 +61,46 @@ bool do_builtin(struct shell *sh, char **argv) {
         sh_destroy(sh);
         exit(0);
     } else if (strcmp(argv[0], "cd") == 0) {
-        if (change_dir(argv) != 0) {
+        size_t cd_result = change_dir(argv);
+      	if (cd_result != 0) {
             perror("cd failed");
         }
-        return true;
+        return cd_result == 0;
     } else if (strcmp(argv[0], "history") == 0) {
-//        HIST_ENTRY **hist_list = history_list();
-//        if (hist_list) {
-//            for (int i = 0; hist_list[i]; i++) {
-//                printf("%d %s\n", i + history_base, hist_list[i]->line);
-//            }
-//        }
-//        return true;
+        HIST_ENTRY **history = history_list();
+        if (history) {
+            for (int i = 0; history[i]; i++) {
+                printf("%d: %s\n", i + 1, history[i]->line);
+            }
+        }
+        return true;
     }
     return false;
 }
 
 void sh_init(struct shell *sh) {
-  sh = malloc(sizeof(struct shell));
-//  sh->shell_terminal = STDIN_FILENO;
-//    sh->shell_is_interactive = isatty(sh->shell_terminal);
-//    if (sh->shell_is_interactive) {
-//        while (tcgetpgrp(sh->shell_terminal) != (sh->shell_pgid = getpgrp())) {
-//            kill(-sh->shell_pgid, SIGTTIN);
-//        }
-//        signal(SIGINT, SIG_IGN);
-//        signal(SIGQUIT, SIG_IGN);
-//        signal(SIGTSTP, SIG_IGN);
-//        signal(SIGTTIN, SIG_IGN);
-//        signal(SIGTTOU, SIG_IGN);
-//        sh->shell_pgid = getpid();
-//        if (setpgid(sh->shell_pgid, sh->shell_pgid) < 0) {
-//            perror("Could not put shell in its own process group");
-//            exit(1);
-//        }
-//        tcsetpgrp(sh->shell_terminal, sh->shell_pgid);
-//        tcgetattr(sh->shell_terminal, &sh->shell_tmodes);
-//    }
+  	sh->shell_terminal = STDIN_FILENO;
+    sh->shell_is_interactive = isatty(sh->shell_terminal);
+    if (sh->shell_is_interactive) {
+      	while (tcgetpgrp(sh->shell_terminal) != (sh->shell_pgid = getpgrp())) {
+          	kill(-sh->shell_pgid, SIGTTIN);
+        }
+        signal(SIGINT, SIG_IGN);
+        signal(SIGQUIT, SIG_IGN);
+        signal(SIGTSTP, SIG_IGN);
+        signal(SIGTTIN, SIG_IGN);
+        signal(SIGTTOU, SIG_IGN);
+      	sh->shell_pgid = getpid();
+        setpgid(sh->shell_pgid, sh->shell_pgid);
+        tcsetpgrp(sh->shell_terminal, sh->shell_pgid);
+        tcgetattr(sh->shell_terminal, &sh->shell_tmodes);
+    }
     sh->prompt = get_prompt("MY_PROMPT");
 }
 
 void sh_destroy(struct shell *sh) {
     free(sh->prompt);
-    free(sh);
+    sh->prompt = NULL;
 }
 
 void parse_args(int argc, char **argv) {
