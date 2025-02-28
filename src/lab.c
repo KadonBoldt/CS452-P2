@@ -10,7 +10,7 @@
 
 char *get_prompt(const char *env) {
     char *prompt = getenv(env);
-    return prompt ? prompt : strdup("shell>");
+    return prompt ? strdup(prompt) : strdup("shell>");
 }
 
 int change_dir(char **args) {
