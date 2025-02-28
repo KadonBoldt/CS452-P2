@@ -36,6 +36,7 @@ static void explain_waitpid(int status)
 
 int main(int argc, char *argv[])
 {
+  	using_history();
     parse_args(argc, argv);
     struct shell sh;
     sh_init(&sh);
@@ -95,6 +96,8 @@ int main(int argc, char *argv[])
             // get control of the shell
             tcsetpgrp(sh.shell_terminal, sh.shell_pgid);
         }
+        free(line);
     }
     sh_destroy(&sh);
+    clear_history();
 }

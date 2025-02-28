@@ -43,7 +43,6 @@ char **cmd_parse(const char *line) {
         token = strtok(NULL, " ");
     }
     free(line_copy);
-    free(line);
     args[i] = NULL;
     return args;
 }
@@ -97,7 +96,6 @@ bool do_builtin(struct shell *sh, char **argv) {
 }
 
 void sh_init(struct shell *sh) {
-	using_history();
   	sh->shell_terminal = STDIN_FILENO;
     sh->shell_is_interactive = isatty(sh->shell_terminal);
     if (sh->shell_is_interactive) {
@@ -126,7 +124,6 @@ void sh_init(struct shell *sh) {
 }
 
 void sh_destroy(struct shell *sh) {
-    clear_history();
   	free(sh->prompt);
     sh->prompt = NULL;
 }
