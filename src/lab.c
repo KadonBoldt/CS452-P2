@@ -1,4 +1,7 @@
 #include <ctype.h>
+#include <pwd.h>
+#include <readline/history.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
